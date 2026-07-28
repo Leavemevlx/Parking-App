@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for,redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -13,6 +13,7 @@ class ParkingLot(db.Model):
     total_spots = db.Column(db.Integer, nullable=False)
     spots_taken = db.Column(db.Integer, nullable=False)
 
+
 class SpotEvent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     lot_id= db.Column(db.Integer, db.ForeignKey('parking_lot.id'), nullable=False)
@@ -22,7 +23,38 @@ class SpotEvent(db.Model):
 @app.route('/')
 
 def index():
-    return render_template('index.html')
+    #fetch the lots here
+    lots = ParkingLot.query.all()
+    return render_template('index.html', lots=lots)
+
+# make the take_spot
+@app.route('/take_spot/<lot_id>', methods=['POST'])
+
+def take_spot(lot_id):
+    # get the lots by it's id
+    spot = ParkingLot.query.get(lot_id)
+    # when the spot is taken, add 1 to spots_taken
+    spot.spots_taken += 1
+    # save it to the database
+    db.session.commit()
+    # return it to the homepage
+    return redirect(url_for('index'))
+
+# make the spot become open
+@app.route('/free_spot/<lot_id>', methods=['POST'])
+
+def free_spot(lot_id):
+    # get the lot from the id
+    spot = ParkingLot.query.get(lot_id)
+    # when it becomes open, make it 0
+    if spot.spots_taken != 0:
+    
+        spot.spots_taken -= 1
+        # save it to the database
+        db.session.commit()
+        # return it to the homepage
+        return redirect(url_for('index'))
+    return redirect(url_for('index'))
 
 if __name__ == "__main__":
     app.run(debug=True)
