@@ -4,19 +4,19 @@
 {% endblock %}
 
 {% block body %}
-<h1>Welcome to UMBPark</h1>
-<h2>Garages:</h2>
+<div class="container mt-4">
+ <!-- HEADINGS -->   
+<h1 class="text-center">Welcome to UMBPark!</h1>
+<h3 class="text-center">Garages:</h3>
+<!-- CARDSTYLES AND BUTTONS -->
 {% for lot in lots %}
-{% if lot.name == "West Garage" %}
-<h3>{{ lot.name }}: {{ lot.total_spots - lot.spots_taken }} spots left</h3>
-{% else %}
-<!-- Regular text format for all other parking lots -->
-<h3>{{ lot.name }}: {{ lot.total_spots - lot.spots_taken }} spots left</h3>
-{% endif %}
 
-<div style="display: flex; gap: 15px; margin-bottom: 25px; align-items: center;">
-    
-    <!-- Button for the take spot -->
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">{{ lot.name }}</h5>
+        <p class="card-text",>{{ lot.total_spots - lot.spots_taken }} spots left</p>
+        <div class="d-flex gap-3">
+         <!-- Button for the take spot -->
     {% if lot.total_spots - lot.spots_taken > 0 %}
         <form action="{{ url_for('take_spot', lot_id=lot.id) }}" method="post" style="margin: 0;">
             <button type="submit" class="btn btn-primary">Take Spot</button>  
@@ -25,13 +25,14 @@
         <button type="button" class="btn btn-secondary" disabled>Garage Full</button>
     {% endif %}
 
-    <!-- Button for the free spot -->
-    {% if lot.spots_taken > 0 %}
+     {% if lot.spots_taken > 0 %}
         <form action="{{ url_for('free_spot', lot_id=lot.id) }}" method="post" style="margin: 0;">
             <button type="submit" class="btn btn-primary">Free Spot</button>
         </form>
     {% endif %}
-
+        </div>
+    </div>
 </div>
 {% endfor %}
+</div>
 {% endblock %}
