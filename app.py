@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///parking.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:M1ximumlox@localhost/umbpark'
 db = SQLAlchemy(app)
 
 class ParkingLot(db.Model):
@@ -32,7 +32,7 @@ def index():
 
 def take_spot(lot_id):
     # get the lots by it's id
-    spot = ParkingLot.query.get(lot_id)
+    spot = ParkingLot.query.with_for_update().get(lot_id)
     # when the spot is taken, add 1 to spots_taken
     spot.spots_taken += 1
     # save it to the database
@@ -45,7 +45,7 @@ def take_spot(lot_id):
 
 def free_spot(lot_id):
     # get the lot from the id
-    spot = ParkingLot.query.get(lot_id)
+    spot = ParkingLot.query.with_for_update().get(lot_id)
     # when it becomes open, make it 0
     if spot.spots_taken != 0:
     
