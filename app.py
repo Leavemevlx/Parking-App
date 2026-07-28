@@ -24,7 +24,7 @@ class SpotEvent(db.Model):
 
 def index():
     #fetch the lots here
-    lots = ParkingLot.query.all()
+    lots = quick_sort(ParkingLot.query.all())
     return render_template('index.html', lots=lots)
 
 # make the take_spot
@@ -55,6 +55,16 @@ def free_spot(lot_id):
         # return it to the homepage
         return redirect(url_for('index'))
     return redirect(url_for('index'))
+
+def quick_sort(lots):
+    if len(lots) <= 1:
+        return lots
+    
+    pivot = lots[len(lots) // 2]
+    left = [lot for lot in lots if lot.spots_taken <= pivot.spots_taken if lot != pivot]
+    right = [lot for lot in lots if lot.spots_taken > pivot.spots_taken if lot != pivot]
+    
+    return quick_sort(left) + [pivot] + quick_sort(right)
 
 if __name__ == "__main__":
     app.run(debug=True)
