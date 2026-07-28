@@ -16,21 +16,25 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">{{ lot.name }}</h5>
-                     <!-- COLOR STATUS FOR EACH GARAGE -->
+
+                    <!-- COLOR STATUS FOR EACH GARAGE -->
                     {% if lot.total_spots - lot.spots_taken == 0 %}
                     <span class="badge bg-danger">Full</span>
-                    {% elif lot.total_spots - lot.spots_taken < lot.total_spots * 0.2 %} <span class="badge bg-warning">Almost
+                    {% elif lot.total_spots - lot.spots_taken < lot.total_spots * 0.2 %} <span class="badge bg-warning">
+                        Almost
                         Full!</span>
                         {% else %}
                         <span class="badge bg-success">Available</span>
                         {% endif %}
                         <p class="card-text" ,>{{ lot.total_spots - lot.spots_taken }} spots left</p>
                         <div class="d-flex gap-3">
+
+                           <a href="{{ url_for('lot', lot_id=lot.id) }}" class="btn btn-info">View Details</a>
                             <!-- Button for the take spot -->
 
                             {% if lot.total_spots - lot.spots_taken > 0 %}
                             <form action="{{ url_for('take_spot', lot_id=lot.id) }}" method="post" style="margin: 0;">
-                                <button type="submit" class="btn btn-primary">Take Spot</button>
+                                <button type="submit" class="btn btn-primary btn-car">Take Spot</button>
                             </form>
                             {% else %}
                             <button type="button" class="btn btn-secondary" disabled>Garage Full</button>
@@ -48,4 +52,4 @@
             {% endfor %}
         </div>
     </div>
-    {% endblock %}
+    {% endblock %}u

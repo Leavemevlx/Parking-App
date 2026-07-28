@@ -12,6 +12,7 @@ class ParkingLot(db.Model):
     status = db.Column(db.Boolean, default=True)
     total_spots = db.Column(db.Integer, nullable=False)
     spots_taken = db.Column(db.Integer, nullable=False)
+    address = db.Column(db.String(300), nullable=True)
 
 
 class SpotEvent(db.Model):
@@ -65,6 +66,17 @@ def quick_sort(lots):
     right = [lot for lot in lots if lot.spots_taken > pivot.spots_taken if lot != pivot]
     
     return quick_sort(left) + [pivot] + quick_sort(right)
+
+# making subpages for the garages 
+@app.route('/lot/<int:lot_id>')
+
+def lot(lot_id):
+    # get the specific lot by id
+    lot = ParkingLot.query.get(lot_id)
+    return render_template('lot.html', lot=lot)
+
+    
+    
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block head %}
+<title>{{ lot.name }}</title>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2 class="text-center">{{ lot.name }}</h2>
+    {% if lot.total_spots - lot.spots_taken == 0 %}
+    <span class="badge bg-danger">Full</span>
+    {% elif lot.total_spots - lot.spots_taken < lot.total_spots * 0.2 %} <span class="badge bg-warning">Almost
+        Full!</span>
+        {% else %}
+        <span class="badge bg-success">Available</span>
+        {% endif %}
+        <p class="card-text">{{ lot.total_spots - lot.spots_taken }} spots left</p>
+        <div class="progress mt-3" style="height: 9px; width: 20%; margin: 10 auto;">
+            <div class="progress-bar" style="width: {{ (lot.spots_taken / lot.total_spots) * 100 }}%">
+            </div>
+        </div>
+        <div class="d-flex gap-2" style=" height: 300px;"></div>
+        <div class="d-flex gap-2"></div>
+
+            <a href="https://www.google.com/maps/dir/?api=1&destination={{ lot.address }}" class="btn btn-primary"
+                target="_blank"><i class="bi bi-google"></i> Google Maps</a>
+
+            <a href="https://maps.apple.com/?daddr={{ lot.address }}" class="btn btn-dark" target="_blank"><i
+                    class="bi bi-apple"></i> Apple Maps</a>
+        </div>
+</div>
+{% endblock %}
